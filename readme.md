@@ -4,10 +4,11 @@
 - As a Book store user I should be able to see the Word report that is generated with user friendly formatting.
 
 Example for formatting:
-|Title|Author|Price|Best Seller|Availability|
-|--|--|--|--|--|
-| Clean Code: A Handbook of Agile Software Craftsmanship | Robert C. Martin | €28.63 | Not Bestseller | Not available in stock  |
-| A Game of Thrones: A Song of Ice and Fire, Book 1 | Robert C. Martin | €29.99 | Bestseller | Available in stock (5) |
+
+Title | Author | Price | Best Seller | Availability
+--- | --- | --- | --- | ---
+ Clean Code: A Handbook of Agile Software Craftsmanship | Robert C. Martin | €28.63 | Not Bestseller | Not available in stock  
+ A Game of Thrones: A Song of Ice and Fire, Book 1 | Robert C. Martin | €29.99 | Bestseller | Available in stock (5) 
 
 ## Technical Constraints
 - Design a web api endpoint that receives filter information and returns the generated report.
