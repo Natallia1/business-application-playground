@@ -16,12 +16,19 @@ namespace BookStore.BackOffice.WebApi
 
         public List<Book> GetFilteredBooks(Filter filter)
         {
-            var bookFilters = filter.GetBookFilters();
-            var authorFilters = filter.GetAuthorFilters();
+            //var bookFilters = filter.GetBookFilters();
 
-            return context.Books
-                .Where(b => bookFilters(b) && authorFilters(b.Author))
-                .ToList<Book>();
+            var query = context.Books.AsQueryable();
+            if (filter.IsBestSeller.HasValue)
+            {
+                query = query.Where(x => x.IsBestSeller == filter.IsBestSeller);
+            }
+            if (filter.IsBestSeller.HasValue)
+            {
+                query = query.Where(x => x.Author.Id == filter.AuthorId);
+            }
+
+            return query.ToList();
         }
     }
 }

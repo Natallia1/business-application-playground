@@ -1,22 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using BookStore.BackOffice.WebApi.Models;
-using Syncfusion.DocIO;
-using Syncfusion.DocIO.DLS;
+using System.Collections.Generic;
 
 namespace BookStore.BackOffice.WebApi.Controllers
 {
-    [Route("books/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
-        // POST Books/Filter
-        [HttpPost]
-        public WordDocument Filter([FromBody] Filter filter)
+        private readonly DbQuery dbQuery;
+
+        public BooksController(DbQuery dbQuery)
         {
+            this.dbQuery = dbQuery;
+        }
+
+
+
+        //POST Books/Filter
+        [HttpPost]
+        [Route("books/filter")]
+        public List<Book> Filter([FromBody]Filter filter)
+        {
+            //= new Filter() { IsBestSeller = true };
+            var books = dbQuery.GetFilteredBooks(filter);
+
+            return books;
         }
     }
 }
