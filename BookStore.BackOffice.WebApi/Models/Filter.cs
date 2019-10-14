@@ -1,72 +1,60 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BookStore.BackOffice.WebApi.Enums;
-using BookStore.BackOffice.WebApi.Extensions;
 
 namespace BookStore.BackOffice.WebApi.Models
 {
     public class Filter
     {
-        private List<Func<Book, bool>> bookFilterList = new List<Func<Book, bool>>();
-        private Func<Book, bool> bookFilter = b => true;
-
         public int? PublicationYear { get; set; }
         public Period? PeriodRelativeToPublicationYear { get; set; }
         public bool? IsBestSeller { get; set; }
         public int? AuthorId { get; set; }
 
-        public Func<Book, bool> GetBookFilters()
+        public IQueryable<Book> AddBookFilters(IQueryable<Book> query)
         {
-            bookFilterList.Add(GetIsBestsellerFilter());
-            bookFilterList.Add(GetPeriodFilter());
-            bookFilterList.Add(GetAuthorFilter());
+            query = GetIsBestsellerFilter(query);
+            query = GetAuthorFilter(query);
+            query = GetPeriodFilter(query);
 
-            foreach (var filter in bookFilterList)
-            {
-                if(filter!=null)
-                {
-                    bookFilter = bookFilter.AndAlso(filter);
-                }
-            }
-            return bookFilter;
+            return query;
         }
 
-        private Func<Book, bool> GetIsBestsellerFilter()
+        private IQueryable<Book> GetIsBestsellerFilter(IQueryable<Book> query)
         {
-            if(IsBestSeller!=null)
+            if (IsBestSeller != null)
             {
-                return (b => b.IsBestSeller == IsBestSeller);
+                return query.Where(b => b.IsBestSeller == IsBestSeller);
             }
-            return null;
+            return query;
         }
 
-        private Func<Book, bool> GetPeriodFilter()
+        private IQueryable<Book> GetAuthorFilter(IQueryable<Book> query)
         {
-            if (PublicationYear!= null)
+            if (AuthorId != null)
             {
-                switch(PeriodRelativeToPublicationYear)
+                return query.Where(b => b.Author.Id == AuthorId);
+            }
+            return query;
+        }
+
+        private IQueryable<Book> GetPeriodFilter(IQueryable<Book> query)
+        {
+            if (PublicationYear != null)
+            {
+                switch (PeriodRelativeToPublicationYear)
                 {
                     case Period.AfterOrEqual:
-                        return b => b.PublicationYear >= PublicationYear;
+                        return query.Where(b => b.PublicationYear >= PublicationYear);
                     case Period.BeforeOrEqual:
-                        return b => b.PublicationYear <= PublicationYear;
+                        return query.Where(b => b.PublicationYear <= PublicationYear);
                     default:
                         throw new NotImplementedException
-                            ($"{PeriodRelativeToPublicationYear.ToString()} option is not implemented.");         
+                            ($"{PeriodRelativeToPublicationYear.ToString()} option is not implemented.");
                 }
             }
-            return null;
+            return query;
         }
-
-        private Func<Book, bool> GetAuthorFilter()
-        {
-            if(AuthorId!=null)
-            {
-                return (b => b.Author.Id == AuthorId);
-            }
-            return null;
-        }
-
-        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookStore.BackOffice.WebApi.Models;
 using BookStore.BackOffice.WebApi.FileFactory.Word;
+using BookStore.BackOffice.WebApi.DbQueries;
 
 namespace BookStore.BackOffice.WebApi.Controllers
 {

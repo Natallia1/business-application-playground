@@ -4,7 +4,7 @@ using System.Linq;
 using BookStore.BackOffice.WebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStore.BackOffice.WebApi
+namespace BookStore.BackOffice.WebApi.DbQueries
 {
     public class DbQuery
     {
@@ -17,15 +17,7 @@ namespace BookStore.BackOffice.WebApi
         public List<Book> GetFilteredBooks(Filter filter)
         {
             var query = context.Books.Include(b=>b.Author).AsQueryable();
-            if (filter.IsBestSeller.HasValue)
-            {
-                query = query.Where(x => x.IsBestSeller == filter.IsBestSeller);
-            }
-            if (filter.IsBestSeller.HasValue)
-            {
-                query = query.Where(x => x.Author.Id == filter.AuthorId);
-            }
-
+            query = filter.AddBookFilters(query);
             return query.ToList();
         }
     }

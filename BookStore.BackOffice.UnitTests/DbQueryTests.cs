@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using BookStore.BackOffice.WebApi;
 using BookStore.BackOffice.WebApi.Models;
+using BookStore.BackOffice.WebApi.DbQueries;
 
 namespace BookStore.BackOffice.UnitTests
 {
