@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BookStore.BackOffice.WebApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.BackOffice.WebApi
 {
@@ -16,9 +16,7 @@ namespace BookStore.BackOffice.WebApi
 
         public List<Book> GetFilteredBooks(Filter filter)
         {
-            //var bookFilters = filter.GetBookFilters();
-
-            var query = context.Books.AsQueryable();
+            var query = context.Books.Include(b=>b.Author).AsQueryable();
             if (filter.IsBestSeller.HasValue)
             {
                 query = query.Where(x => x.IsBestSeller == filter.IsBestSeller);

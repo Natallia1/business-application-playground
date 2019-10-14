@@ -1,7 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using BookStore.BackOffice.WebApi.Models;
-using System.Collections.Generic;
+using BookStore.BackOffice.WebApi.FileFactory.Word;
 
 namespace BookStore.BackOffice.WebApi.Controllers
 {
@@ -15,17 +14,18 @@ namespace BookStore.BackOffice.WebApi.Controllers
             this.dbQuery = dbQuery;
         }
 
-
-
         //POST Books/Filter
         [HttpPost]
         [Route("books/filter")]
-        public List<Book> Filter([FromBody]Filter filter)
+        public FileContentResult Filter([FromBody]Filter filter)
         {
-            //= new Filter() { IsBestSeller = true };
             var books = dbQuery.GetFilteredBooks(filter);
+            var word = new BookListToWord();
+            var fileStream = word.GetWord(books);
 
-            return books;
-        }
+            var result = new FileContentResult(fileStream.ToArray(), "application/ms-word");
+            result.FileDownloadName = "myReport.docx";
+            return result;
+        }  
     }
 }
